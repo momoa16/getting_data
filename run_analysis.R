@@ -34,9 +34,10 @@ completeSet_mean_std <- bind_cols(activities, completeSet_mean_std)
 names(completeSet_mean_std) <- c("activity", as.character(mean_std_variables$V2))
 
 ## 5- From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
-tidy_data <- read.table("train/subject_train.txt", col.names = "subject") %>% 
-                bind_rows(read.table("test/subject_test.txt", col.names = "subject")) %>%
-                bind_cols(completeSet_mean_std) %>%
+subjects <- read.table("train/subject_train.txt", col.names = "subject") %>% 
+                bind_rows(read.table("test/subject_test.txt", col.names = "subject"))
+subjects$subject <- paste("subject", subjects$subject, sep="") 
+tidy_data <-    bind_cols(subjects, completeSet_mean_std) %>%
                 group_by(subject, activity) %>%
                 summarise_each(funs(mean))
 
